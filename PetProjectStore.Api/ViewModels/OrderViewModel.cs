@@ -1,5 +1,4 @@
-﻿using PetProjectStore.Api.Dtos;
-using PetProjectStore.DAL.Entities;
+﻿using PetProjectStore.Api.Models;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +10,7 @@ namespace PetProjectStore.Api.ViewModels
 
         public string CustomerId { get; set; }
 
-        public IReadOnlyCollection<ProductDto> Products { get; set; }
+        public IReadOnlyCollection<ProductViewModel> Products { get; set; }
 
         public string Address { get; set; }
 
@@ -19,7 +18,7 @@ namespace PetProjectStore.Api.ViewModels
 
         public decimal TotalCost { get; set; }
 
-        public DeliveryType DeliveryType { get; set; }
+        public DeliveryTypeModel DeliveryType { get; set; }
 
     }
 }

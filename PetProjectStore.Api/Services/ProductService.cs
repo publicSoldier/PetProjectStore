@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetProjectStore.Api.Exceptions;
 using PetProjectStore.Api.Interfaces;
+using PetProjectStore.Api.Models;
 using PetProjectStore.Api.ViewModels;
 using PetProjectStore.DAL.Entities;
 using PetProjectStore.DAL.EntityFramework;
@@ -47,11 +48,6 @@ namespace PetProjectStore.Api.Services
             await _storeContext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyCollection<Product>> GetAllAsync()
-        {
-            return await _storeContext.Products.ToArrayAsync();
-        }
-
         public async Task<Product> GetAsync(long id)
         {
             var temp = await _storeContext.Products.FindAsync(id);
@@ -79,20 +75,20 @@ namespace PetProjectStore.Api.Services
             return product;
         }
 
-        public async Task<ProductPageViewModel> GetByPageAsync(int pageNumber, int pageSize)
+        public async Task<ProductPageViewModel> GetByPageAsync(PageModel pageModel)
         {
-            if (pageNumber == 0 || pageSize == 0)
+            if (pageModel.PageNumber == 0 || pageModel.PageSize == 0)
                 throw new ArgumentNullException();
 
             var products = _storeContext.Products;
 
             var count = products.Count();
 
-            var items = await products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArrayAsync();
+            var items = await products.Skip((pageModel.PageNumber - 1) * pageModel.PageSize).Take(pageModel.PageSize).ToArrayAsync();
 
             var productViewModel = _mapper.Map<IReadOnlyCollection<ProductViewModel>>(items);
 
-            PageViewModel pageViewModel = new PageViewModel(count, pageNumber, pageSize);
+            PageViewModel pageViewModel = new PageViewModel(count, pageModel.PageNumber, pageModel.PageSize);
 
             ProductPageViewModel productPageViewModel = new ProductPageViewModel
             {

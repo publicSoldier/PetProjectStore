@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using PetProjectStore.Api.ViewModels;
 using AutoMapper;
+using PetProjectStore.Api.Models;
 
 namespace PetProjectStore.Api.Services
 {
@@ -48,7 +49,7 @@ namespace PetProjectStore.Api.Services
 
         public async Task DeleteAsync(long id, string userId)
         {
-            var temp = await _storeContext.Orders.FirstOrDefaultAsync(f => f.Id == id && f.CustomerId == userId);
+            var temp = await _storeContext.Orders.FirstOrDefaultAsync(f => f.Id == id);
 
             if (temp == null)
             {
@@ -57,14 +58,6 @@ namespace PetProjectStore.Api.Services
 
             _storeContext.Orders.Remove(temp);
             await _storeContext.SaveChangesAsync();
-        }
-
-        public IReadOnlyCollection<Order> GetAll(string userId)
-        {
-            return _storeContext.Orders
-                .Where(w => w.CustomerId == userId)
-                .Include(i => i.Products)
-                .ToArray();
         }
 
         public async Task<Order> GetAsync(long id, string userId)
@@ -80,9 +73,9 @@ namespace PetProjectStore.Api.Services
             return entity;
         }
 
-        public async Task<OrderPageViewModel> GetByPageAsync(int pageNumber, int pageSize, string userId)
+        public async Task<OrderPageViewModel> GetByPageAsync(PageModel pageModel, string userId)
         {
-            if (pageNumber == 0 || pageSize == 0)
+            if (pageModel.PageNumber == 0 || pageModel.PageSize == 0)
                 throw new ArgumentNullException();
 
             var orders = _storeContext.Orders
@@ -91,11 +84,11 @@ namespace PetProjectStore.Api.Services
 
             var count = orders.Count();
 
-            var items = await orders.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArrayAsync();
+            var items = await orders.Skip((pageModel.PageNumber - 1) * pageModel.PageSize).Take(pageModel.PageSize).ToArrayAsync();
 
             var orderViewModel = _mapper.Map<IReadOnlyCollection<OrderViewModel>>(items);
 
-            PageViewModel pageViewModel = new PageViewModel(count, pageNumber, pageSize);
+            PageViewModel pageViewModel = new PageViewModel(count, pageModel.PageNumber, pageModel.PageSize);
 
             OrderPageViewModel orderPageViewModel = new OrderPageViewModel
             {

@@ -5,9 +5,9 @@ using PetProjectStore.Api.Exceptions;
 using PetProjectStore.Api.Interfaces;
 using PetProjectStore.DAL.Entities;
 using System.Threading.Tasks;
-using PetProjectStore.Api.Dtos;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using PetProjectStore.Api.Models;
 
 namespace PetProjectStore.Api.Controllers
 {
@@ -26,14 +26,14 @@ namespace PetProjectStore.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{pageNumber}/{pageSize}")]
+        [HttpPost]
+        [Route("page")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByPageAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> GetByPageAsync([FromBody] PageModel pageModel)
         {
             try
             {
-                var products = await _productService.GetByPageAsync(pageNumber, pageSize);
+                var products = await _productService.GetByPageAsync(pageModel);
 
                 return Ok(products);
             }
@@ -64,9 +64,9 @@ namespace PetProjectStore.Api.Controllers
 
         [HttpPost]
         [Authorize(Policy = nameof(UserRole.Admin))]
-        public async Task<IActionResult> AddAsync([FromBody] ProductDto productDto)
+        public async Task<IActionResult> AddAsync([FromBody] ProductModel productModel)
         {
-            var product = _mapper.Map<Product>(productDto);
+            var product = _mapper.Map<Product>(productModel);
 
             try
             {
@@ -83,9 +83,9 @@ namespace PetProjectStore.Api.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Policy = nameof(UserRole.Admin))]
-        public async Task<IActionResult> UpdateAsync(long id, [FromBody] ProductDto productDto)
+        public async Task<IActionResult> UpdateAsync(long id, [FromBody] ProductModel productModel)
         {
-            var product = _mapper.Map<Product>(productDto);
+            var product = _mapper.Map<Product>(productModel);
             product.Id = id;
 
             try

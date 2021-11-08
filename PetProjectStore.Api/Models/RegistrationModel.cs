@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace PetProjectStore.Api.Dtos
+namespace PetProjectStore.Api.Models
 {
-    public class RegistrationDto
+    public class RegistrationModel
     {
         [Required(ErrorMessage = "Укажите e-mail")]
         public string Email { get; set; }

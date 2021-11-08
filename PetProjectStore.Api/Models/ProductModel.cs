@@ -1,6 +1,6 @@
-﻿namespace PetProjectStore.Api.Dtos
+﻿namespace PetProjectStore.Api.Models
 {
-    public class ProductDto
+    public class ProductModel
     {
         public string Name { get; set; }
 

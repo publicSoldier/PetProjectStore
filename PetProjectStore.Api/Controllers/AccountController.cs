@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetProjectStore.Api.Dtos;
 using PetProjectStore.Api.Exceptions;
 using PetProjectStore.Api.Interfaces;
+using PetProjectStore.Api.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,11 +29,11 @@ namespace PetProjectStore.Api.Controllers
         [HttpPost]
         [Route("LogIn")]
         [AllowAnonymous]
-        public async Task<IActionResult> LogIn ([FromBody] LogInDto logInDto)
+        public async Task<IActionResult> LogIn ([FromBody] LogInModel logInModel)
         {
             try
             {
-                var logInResult = await _accountService.LogInAsync(logInDto);
+                var logInResult = await _accountService.LogInAsync(logInModel);
                 
                 await AuthenticateAsync(logInResult);
 
@@ -47,11 +48,11 @@ namespace PetProjectStore.Api.Controllers
         [HttpPost]
         [Route("Registration")]
         [AllowAnonymous]
-        public async Task<IActionResult> Registration([FromBody] RegistrationDto registrationDto)
+        public async Task<IActionResult> Registration([FromBody] RegistrationModel registrationModel)
         {
             try
             {
-                await _accountService.RegistrationAsync(registrationDto);
+                await _accountService.RegistrationAsync(registrationModel);
 
                 return Ok();
             }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PetProjectStore.Api.Dtos
+namespace PetProjectStore.Api.Models
 {
-    public class LogInDto
+    public class LogInModel
     {
         [Required(ErrorMessage = "Укажите e-mail")]
         public string Email { get; set; }

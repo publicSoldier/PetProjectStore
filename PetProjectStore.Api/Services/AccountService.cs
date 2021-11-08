@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using PetProjectStore.Api.Dtos;
 using PetProjectStore.Api.Exceptions;
 using PetProjectStore.Api.Interfaces;
+using PetProjectStore.Api.Models;
 using PetProjectStore.DAL.Entities;
 using System;
 using System.Linq;
@@ -23,11 +24,11 @@ namespace PetProjectStore.Api.Services
             _mapper = mapper;
         }
 
-        public async Task RegistrationAsync(RegistrationDto registrationDto)
+        public async Task RegistrationAsync(RegistrationModel registrationModel)
         {
-            var user = _mapper.Map<User>(registrationDto);
+            var user = _mapper.Map<User>(registrationModel);
 
-            var createResult = await _userManager.CreateAsync(user, registrationDto.Password);
+            var createResult = await _userManager.CreateAsync(user, registrationModel.Password);
 
             var addToRoleResult = await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
 
@@ -38,14 +39,14 @@ namespace PetProjectStore.Api.Services
                 throw new RegistrationException(addToRoleResult.Errors);           
         }
 
-        public async Task<LogInResultDto> LogInAsync(LogInDto logInDto)
+        public async Task<LogInResultDto> LogInAsync(LogInModel logInModel)
         {
-            var user = await _userManager.FindByEmailAsync(logInDto.Email);
+            var user = await _userManager.FindByEmailAsync(logInModel.Email);
 
             if (user is null)
                 throw new LogInException("Неверный логин или пароль");
 
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, logInDto.Password, false);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, logInModel.Password, false);
 
             if (!signInResult.Succeeded)
                 throw new LogInException("Неверный логин или пароль");

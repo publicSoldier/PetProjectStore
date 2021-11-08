@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using PetProjectStore.Api.Dtos;
+using PetProjectStore.Api.Models;
 using PetProjectStore.Api.ViewModels;
 using PetProjectStore.DAL.Entities;
 
@@ -16,21 +16,23 @@ namespace PetProjectStore.Api.Mapper.Profiles
 
         public void RegisterProductMaps()
         {
-            CreateMap<ProductDto, Product>();
-            CreateMap<Product, ProductDto>();
+            CreateMap<ProductModel, Product>();
+            CreateMap<Product, ProductModel>();
             CreateMap<Product, ProductViewModel>();
         }
 
         public void RegisterOrderMaps()
         {
-            CreateMap<OrderDto, Order>();
+            CreateMap<OrderModel, Order>();
             CreateMap<Order, OrderViewModel>();
+
+            CreateMap<DeliveryTypeModel, DeliveryType>();
         }
 
         public void RegisterUserMaps()
         {
-            CreateMap<RegistrationDto, User>();
-            CreateMap<LogInDto, User>();
+            CreateMap<RegistrationModel, User>();
+            CreateMap<LogInModel, User>();
         }
     }
 }
