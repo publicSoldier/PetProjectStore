@@ -5,11 +5,11 @@ using PetProjectStore.Api.Exceptions;
 using PetProjectStore.Api.Interfaces;
 using PetProjectStore.DAL.Entities;
 using System.Threading.Tasks;
-using PetProjectStore.Api.Dtos;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
+using PetProjectStore.Api.Models;
 
 namespace PetProjectStore.Api.Controllers
 {
@@ -28,16 +28,15 @@ namespace PetProjectStore.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{pageNumber}/{pageSize}")]
-        [Authorize(Policy = "all")]
-        public async Task<IActionResult> GetByPageAsync(int pageNumber = 1, int pageSize = 5)
+        [HttpPost]
+        [Route("page")]
+        public async Task<IActionResult> GetByPageAsync([FromBody] PageModel pageModel)
         {
             var userId = GetUserId();
 
             try
             {
-                var orders = await _orderService.GetByPageAsync(pageNumber, pageSize, userId);
+                var orders = await _orderService.GetByPageAsync(pageModel, userId);
 
                 return Ok(orders);
             }
@@ -49,8 +48,7 @@ namespace PetProjectStore.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Policy = "all")]
-        public async Task<IActionResult> GetAsync(int id)
+        public async Task<IActionResult> GetAsync(long id)
         {
             var userId = GetUserId();
 
@@ -70,12 +68,12 @@ namespace PetProjectStore.Api.Controllers
 
         [HttpPost]
         [Authorize(Policy = "all")]
-        public async Task<IActionResult> AddAsync([FromBody] OrderDto orderDto)
+        public async Task<IActionResult> AddAsync([FromBody] OrderModel orderModel)
         {
-            var order = _mapper.Map<Order>(orderDto);
+            var order = _mapper.Map<Order>(orderModel);
             var userId = GetUserId();
 
-            var productIds = orderDto.ProductIds;
+            var productIds = orderModel.ProductIds;
 
             try
             {
