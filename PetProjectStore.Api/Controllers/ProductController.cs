@@ -26,10 +26,10 @@ namespace PetProjectStore.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        [Route("page")]
+        [HttpGet]
+        [Route("list")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByPageAsync([FromBody] PageModel pageModel)
+        public async Task<IActionResult> GetByPageAsync([FromQuery] PageModel pageModel)
         {
             try
             {

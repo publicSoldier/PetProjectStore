@@ -28,9 +28,9 @@ namespace PetProjectStore.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        [Route("page")]
-        public async Task<IActionResult> GetByPageAsync([FromBody] PageModel pageModel)
+        [HttpGet]
+        [Route("list")]
+        public async Task<IActionResult> GetByPageAsync([FromQuery] PageModel pageModel)
         {
             var userId = GetUserId();
 
